@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TTE Skill 用户说明书。了解如何在 Codex 中开展目标试验模拟、核查数据可行性、选择估计方法并报告结果。">
+  <meta name="theme-color" content="#172e2b">
+  <title>TTE Skill 用户说明书 · 目标试验模拟</title>
+  <style>
+    :root { color-scheme: light; --paper:#f6f5ef; --ink:#1c302c; --muted:#4e635d; --accent:#0b6353; --line:#d5ddd2; --wash:#e8f1e8; --white:#fffefa; --dark:#172e2b; }
+    * { box-sizing:border-box; }
+    html { scroll-padding-top: 1.5rem; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:1rem/1.75 "Source Sans 3","Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
+    a { color:var(--accent); text-underline-offset:.22em; }
+    :focus-visible { outline:3px solid #a57518; outline-offset:4px; }
+    .skip { position:absolute; left:1rem; top:1rem; transform:translateY(-200%); background:var(--white); padding:.5rem 1rem; z-index:3; }
+    .skip:focus { transform:none; }
+    .wrap { width:min(1080px, calc(100% - 3rem)); margin-inline:auto; }
+    header { background:var(--dark); color:#f8faf1; border-bottom:5px solid #8cad98; }
+    .mast { display:flex; justify-content:space-between; align-items:center; padding:1.1rem 0; border-bottom:1px solid #526c62; font-size:.92rem; }
+    .mast a { color:#e2f3df; }
+    .hero { padding:3.75rem 0 3.5rem; max-width:800px; }
+    .eyebrow { margin:0; color:#b7d3c1; font-size:.82rem; letter-spacing:.12em; }
+    h1,h2,h3 { line-height:1.3; text-wrap:balance; }
+    h1 { font-size:clamp(2.35rem, 6vw, 4.25rem); margin:.55rem 0 1rem; letter-spacing:-.045em; }
+    .lead { color:#e3eee6; max-width:37rem; margin:0 0 1.55rem; font-size:1.07rem; }
+    .button, button { display:inline-block; padding:.62rem 1rem; border:1px solid transparent; border-radius:.38rem; font:inherit; font-weight:650; cursor:pointer; text-decoration:none; }
+    .button { background:#e3f0df; color:#18362d; }
+    .button:hover { background:#f0f8ed; }
+    .layout { display:grid; grid-template-columns:11rem minmax(0, 1fr); gap:3rem; padding-block:2.8rem 3.5rem; }
+    nav { align-self:start; position:sticky; top:1.25rem; border-left:2px solid var(--line); padding-left:1rem; }
+    nav ul { list-style:none; margin:.4rem 0 0; padding:0; }
+    nav a { display:block; padding:.24rem 0; color:var(--muted); text-decoration:none; }
+    nav a:hover { text-decoration:underline; }
+    section { margin-bottom:2.7rem; }
+    section:last-child { margin-bottom:0; }
+    h2 { font-size:clamp(1.5rem,4vw,2.1rem); margin:0 0 .75rem; letter-spacing:-.02em; }
+    h3 { font-size:1.06rem; margin:0 0 .3rem; }
+    p { margin:.6rem 0 1rem; overflow-wrap:anywhere; }
+    .prompt,.contact,.timeline { background:var(--white); border:1px solid var(--line); border-radius:.55rem; padding:1.05rem 1.2rem; }
+    .prompt p { margin:.25rem 0 .85rem; }
+    code, pre { font-family:"IBM Plex Mono",Consolas,"Microsoft YaHei",monospace; }
+    code { background:#e8eee4; color:#174c3d; padding:.08em .28em; border-radius:.2em; overflow-wrap:anywhere; }
+    button { background:var(--wash); border-color:#a8c3ae; color:#204c3f; }
+    button:hover { background:#dceadc; }
+    button[hidden] { display:none; }
+    .status { margin-left:.5rem; color:var(--muted); font-size:.88rem; }
+    ol.steps { list-style:none; counter-reset:steps; margin:1.1rem 0 0; padding:0; }
+    .steps li { position:relative; padding:.86rem 0 .86rem 3rem; border-top:1px solid var(--line); }
+    .steps li::before { counter-increment:steps; content:counter(steps); position:absolute; left:0; top:.9rem; width:1.95rem; height:1.95rem; line-height:1.95rem; text-align:center; color:var(--accent); background:var(--wash); border-radius:50%; font-weight:700; }
+    .steps p { margin:0; }
+    .timeline { margin:1.2rem 0 .7rem; }
+    .axis { display:grid; grid-template-columns:repeat(3,minmax(0, 1fr)); gap:1rem; margin:.5rem 0 0; }
+    .axis div { padding:.6rem 0 0; border-top:3px solid #c5d6c9; }
+    .axis .zero { border-color:var(--accent); }
+    .axis small { display:block; color:var(--muted); line-height:1.5; }
+    table { width:100%; border-collapse:collapse; text-align:left; }
+    th,td { padding:.68rem .65rem; border-bottom:1px solid var(--line); vertical-align:top; }
+    thead { background:var(--wash); }
+    tbody th { width:31%; }
+    details { padding:.65rem 0; border-bottom:1px solid var(--line); }
+    summary { font-weight:650; cursor:pointer; }
+    details p { margin:.45rem 0 .18rem; color:var(--muted); }
+    .contact { border-left:4px solid var(--accent); }
+    .contact p { margin:.15rem 0 .65rem; }
+    .wechat { font-size:1.05rem; font-weight:700; }
+    footer { border-top:1px solid var(--line); padding:1.2rem 0; color:var(--muted); font-size:.9rem; }
+    @media (max-width:730px) { .wrap { width:calc(100% - 2rem); } .hero { padding:2.6rem 0; } .layout { display:block; padding-top:1.6rem; } nav { position:static; border:0; padding:0 0 1.1rem; margin-bottom:1.45rem; border-bottom:1px solid var(--line); } nav ul { display:flex; flex-wrap:wrap; gap:0 .85rem; } th,td { padding:.58rem .4rem; } .axis { gap:.55rem; } }
+    @media print { header { background:white; color:black; border-bottom:1px solid #aaa; } .hero { padding:1rem 0; } .lead,.eyebrow,.mast a { color:black; } .layout { display:block; padding:1rem 0; } nav,button,.button,.status { display:none !important; } section { margin-bottom:1.4rem; } tr,figure,.contact { break-inside:avoid; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">跳到说明正文</a>
+  <header>
+    <div class="wrap">
+      <div class="mast"><strong>TTE Skill</strong><a href="https://github.com/xgzryg">@xgzryg</a></div>
+      <div class="hero">
+        <p class="eyebrow">TARGET TRIAL EMULATION · V1.0.1</p>
+        <h1>TTE Skill 用户说明书</h1>
+        <p class="lead">在 Codex 中将临床问题写成目标试验，核查观察数据能否回答该问题，再按预定方案分析和报告。</p>
+        <a class="button" href="#obtain">获取 TTE Skill</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap layout">
+    <nav aria-label="说明书目录">
+      <strong>本页目录</strong>
+      <ul>
+        <li><a href="#start">开始使用</a></li>
+        <li><a href="#workflow">研究流程</a></li>
+        <li><a href="#methods">方法选择</a></li>
+        <li><a href="#deliverables">结果与报告</a></li>
+        <li><a href="#faq">常见问题</a></li>
+        <li><a href="#obtain">获取 Skill</a></li>
+      </ul>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <section id="start">
+        <h2>开始使用</h2>
+        <p>获取 Skill 后，在 Codex 中打开你的课题项目，告诉 Codex Skill 文件的位置并请它安装。安装完成后，在新一轮对话中使用 <code>$tte-workflow</code>。可以从临床问题、已有研究方案或已整理的分析数据开始。</p>
+        <div class="prompt">
+          <h3>可复制的起始提示词</h3>
+          <p id="example-prompt">使用 $tte-workflow。我想在【目标人群】中比较【策略 A】与【策略 B】，评估【结局】在【随访时限】内的差异。我有【数据字典、表结构或队列文件】。先拟定目标试验方案，并核实这些数据能否确定入组资格、共同起点、治疗记录、关键混杂因素和结局。数据支持时，按方案完成分析、诊断和报告。</p>
+          <button type="button" data-copy="example-prompt" hidden>复制提示词</button><span class="status" role="status"></span>
+        </div>
+        <p>只做选题、方案审阅或结果复核时，直接注明当前阶段即可。需要运行示例或正式分析时，按取得的 Skill 包内说明配置 R 和所需依赖。取数工具由数据格式与课题环境决定。</p>
+      </section>
+
+      <section id="workflow">
+        <h2>从研究问题到效应估计</h2>
+        <ol class="steps">
+          <li><h3>选题与查新</h3><p>明确一项临床决策，查阅相关试验、指南和观察性研究，说明本次比较会补充什么证据。</p></li>
+          <li><h3>写出目标试验</h3><p>定义人群、资格、干预和对照、策略分配、随访、结局及估计目标。在共同的 <code>time zero</code> 对齐资格判断、策略分配和随访开始。</p></li>
+          <li><h3>核查数据可行性</h3><p>研究者根据可取得的数据和随访情况决定数据来源。用数据字典和病例时间线核实字段含义、可用时点、治疗与结局的先后，以及每种策略是否有足够的观测支持。</p></li>
+          <li><h3>按方案分析</h3><p>根据策略和估计目标选择方法。预先规定宽限期、策略偏离、失访与竞争事件的处理。纵向协变量采用决策时已可获得的信息，推断考虑同一患者的克隆或重复入组。</p></li>
+          <li><h3>核对诊断与解释</h3><p>按方法检查组间重叠、协变量平衡、权重分布、删失和有效样本量。报告效应大小、区间、关键假设和敏感性分析。</p></li>
+        </ol>
+        <figure class="timeline" aria-label="目标试验的时间轴">
+          <figcaption><strong>起点如何对齐</strong></figcaption>
+          <div class="axis">
+            <div><strong>起点前</strong><small>核实既往用药和基线信息</small></div>
+            <div class="zero"><strong>Time zero</strong><small>资格、策略分配与随访开始</small></div>
+            <div><strong>起点后</strong><small>记录治疗、偏离、结局和随访终止</small></div>
+          </div>
+        </figure>
+        <p>如果无法定位共同起点、确定治疗策略或观测关键混杂与结局，应先说明缺口。由研究者决定补充资料或修订研究问题，再继续估计。</p>
+      </section>
+
+      <section id="methods">
+        <h2>按研究问题选择方法</h2>
+        <table>
+          <thead><tr><th scope="col">研究情形</th><th scope="col">可考虑的实现</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">在起点比较两种选择</th><td>视估计目标和数据条件，采用倾向评分加权、标准化、AIPW 或基线 TMLE。</td></tr>
+            <tr><th scope="row">允许在窗口内启动</th><td>明确宽限期和策略兼容性后考虑克隆–删失–加权（CCW）。处理人工删失及由此产生的选择问题。</td></tr>
+            <tr><th scope="row">治疗决策反复出现</th><td>可用序贯目标试验定义每轮的资格、分配和随访，并在推断中纳入患者内相关。</td></tr>
+            <tr><th scope="row">比较持续或动态策略</th><td>先核实各决策时点的治疗历史与时变混杂，再判断纵向 g-formula、LTMLE 或其他纵向方法是否适用。</td></tr>
+          </tbody>
+        </table>
+        <p>因果解释取决于所用数据、模型和识别假设，包括一致性、可交换性及正值性。实际研究需检查时间顺序、随访和策略支持，再解释结果。</p>
+      </section>
+
+      <section id="deliverables">
+        <h2>结果与报告</h2>
+        <p>从方案到结果应能逐项追溯。保存目标试验与数据实现对照表、队列流程、变量来源与处理规则、分析代码、未舍入效应值及诊断。按估计目标呈现风险、风险差或其他适用指标及其区间，并解释主要限制与敏感性分析。可用 TARGET 指南检查报告透明度。</p>
+        <p><a href="https://pubmed.ncbi.nlm.nih.gov/26994063/">目标试验框架原文</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/40899949/">TARGET 报告声明</a></p>
+      </section>
+
+      <section id="faq">
+        <h2>常见问题</h2>
+        <details><summary>我还没有最终选题，可以先用吗？</summary><p>可以。提供疾病、临床决策场景和大致数据条件，先做查新和可行性评估，确定哪些问题值得进入正式方案。</p></details>
+        <details><summary>已经有清洗好的队列表，怎么开始？</summary><p>提供字段字典、研究起点、治疗定义及随访规则，请 Codex 核对数据与目标试验方案的对应关系。需要纵向分析时，再核查每个决策时点的观测历史。</p></details>
+        <details><summary>出院后看不到死亡，还能分析固定期限全因死亡吗？</summary><p>先核实出院后结局覆盖和观察终止，并说明相应假设。院内死亡是另一项结局，是否调整研究目标应由研究者根据临床问题决定。</p></details>
+      </section>
+
+      <section id="obtain" class="contact">
+        <h2>获取 TTE Skill</h2>
+        <p>获取 TTE Skill，请联系微信 <strong class="wechat" id="wechat-id">xgzryg</strong>。</p>
+        <button type="button" data-copy="wechat-id" hidden>复制微信号</button><span class="status" role="status"></span>
+      </section>
+    </main>
+  </div>
+  <footer><div class="wrap">TTE Skill 用户说明书 · v1.0.1</div></footer>
+  <script>
+    if (navigator.clipboard && window.isSecureContext) {
+      for (const button of document.querySelectorAll('button[data-copy]')) {
+        button.hidden = false;
+        button.addEventListener('click', async () => {
+          const text = document.getElementById(button.dataset.copy).textContent.trim();
+          const status = button.nextElementSibling;
+          try {
+            await navigator.clipboard.writeText(text);
+            status.textContent = '已复制';
+          } catch {
+            status.textContent = '请选中文字手动复制';
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
